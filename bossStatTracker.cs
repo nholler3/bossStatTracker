@@ -50,8 +50,7 @@ namespace bossStatTracker
 		}
 
  		// Regular OnHitNPC (accounts for all weapon types)
-		public override void OnHitNPC( NPC target, NPC.HitInfo hitInfo, int damage)
-        {
+		public override void OnHitNPC( NPC target, NPC.HitInfo hitInfo, int damage){
             // Only track damage if the target is a boss
             if (target.active && target.boss && damage > 0){
                 bossDamageDealtThisSecond += damage;
