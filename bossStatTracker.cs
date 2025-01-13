@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria.ModLoader;
 using Terraria;
+using Terraria.ID;
 
 namespace bossStatTracker
 {
@@ -14,8 +15,11 @@ namespace bossStatTracker
 		//mod wide configurations
 	}
 
-	public class BossStatPlayer : ModPlayer{
+	public class bossStatPlayer : ModPlayer{
 		//individual player based configs
+
+		private int bossDamageDealtThisSecond = 0; // Damage dealt in the current second
+        private int bossDps = 0; // DPS value
 		private bool isBossActive = false;
         private int bossFightTimer = 0;
 
@@ -45,7 +49,14 @@ namespace bossStatTracker
 			}
 		}
 
-		
+ 		// Regular OnHitNPC (accounts for all weapon types)
+		public override void OnHitNPC( NPC target, NPC.HitInfo hitInfo, int damage)
+        {
+            // Only track damage if the target is a boss
+            if (target.active && target.boss && damage > 0){
+                bossDamageDealtThisSecond += damage;
+            }
+        }
 
 	}
 }
