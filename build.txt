@@ -1,0 +1,3 @@
+displayName = Boss Stat Tracker
+author = amishage &amp; Gmoney
+version = 0.1
