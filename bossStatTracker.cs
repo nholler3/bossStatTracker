@@ -33,7 +33,7 @@ namespace bossStatTracker
 		private int maxDmgPerSec =0;
 		private int totalDamage=0;
 		
-		private NPC bossNPC= null;
+		private string bossName= "";
 
 		private bool updateChecklist = false; // Flag to indicate when to update the checklist
 
@@ -44,7 +44,10 @@ namespace bossStatTracker
             bool bossFound = false;
 			frameCounter++; //tick the frame counter up, this runs at the end of every frame
 
+			//we are counting the frames correctly
+			//Main.NewText($"Frame at: {frameCounter}"); //debugging
 			//reset DPS calculations every second (60fps)
+			
 			if (frameCounter>=60){
 				bossDps=bossDmgDealtThisFrame; //store the value of the 60 frames worth of damage and reset 
 				bossDmgDealtThisFrame=0;
@@ -53,13 +56,14 @@ namespace bossStatTracker
 				//send the dps over to maxDPS for calculations
 				maxDPS(bossDps);
 				totalDMG(bossDps);
+				Main.NewText($"Sending DPS over: {bossDps}"); //debugging
 			}
 
             // Check if any boss is active
             foreach (var npc in Main.npc){
                 if (npc.active && npc.boss){ // NPC is active (Alive) and is a boss
                     bossFound = true;
-					bossNPC=npc;
+					bossName=npc.FullName;
                     break;
                 }
 			}
@@ -67,6 +71,8 @@ namespace bossStatTracker
 			if (bossFound){ //if the boss is alive
 				if(!isBossActive){ //tells it this is the beginning since we reset the variable below
 					//fight has started
+					Main.NewText($"Boss Fight started"); //debugging
+					Main.NewText($"Boss is: {bossName}"); //debugging
 					isBossActive=true;
 					resetVariables();
 				}
@@ -76,6 +82,9 @@ namespace bossStatTracker
 					//fight has ended
 					isBossActive=false;
 					updateChecklist=true;
+					Main.NewText($"Total Boss Damage done: {totalDamage}");
+
+					UpdateBossChecklist(bossName);
 				}
 			}
 		}
@@ -103,19 +112,19 @@ namespace bossStatTracker
 		}
 
 
-		public override void OnEnterWorld(){
+/* 		public override void OnEnterWorld(){
 			if (updateChecklist){
-            	UpdateBossChecklist(bossNPC); // Pass the bossNPC reference
+            	UpdateBossChecklist(bossName); // Pass the bossNPC reference
             	updateChecklist = false; // Reset the flag
 			}
-		}
+		} */
 
 
-		public void UpdateBossChecklist(NPC boss){
+		public void UpdateBossChecklist(string bossName){
             // Check if the Boss Checklist mod is loaded
             Mod bossChecklist = ModLoader.GetMod("BossChecklist");
             if (bossChecklist != null){
-                string bossName = boss.FullName; // Replace with the actual boss name
+                //string bossName = boss.FullName; // Replace with the actual boss name
 
 				// Debugging output
 				Main.NewText($"Updating Boss Checklist for: {bossName}");
@@ -141,7 +150,8 @@ namespace bossStatTracker
 			bossDmgDealtThisFrame=0;
 			maxDmgPerSec=0;
 			totalDamage=0;
-			bossNPC=null;
+			bossName="";
+			updateChecklist=false;
 		}
 
 
