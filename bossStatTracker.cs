@@ -103,7 +103,7 @@ namespace bossStatTracker
 		}
 
 
-		public void OnWorldLoad(){
+		public override void OnEnterWorld(){
 			if (updateChecklist){
             	UpdateBossChecklist(bossNPC); // Pass the bossNPC reference
             	updateChecklist = false; // Reset the flag
