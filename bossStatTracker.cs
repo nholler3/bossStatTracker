@@ -33,7 +33,9 @@ namespace bossStatTracker
 		private int maxDmgPerSec =0;
 		private int totalDamage=0;
 		
-		private Terraria.NPC bossNPC= null;
+		private NPC bossNPC= null;
+
+		private bool updateChecklist = false; // Flag to indicate when to update the checklist
 
 
 
@@ -73,7 +75,7 @@ namespace bossStatTracker
 				if (isBossActive){ //if the boss is no longer alive
 					//fight has ended
 					isBossActive=false;
-					UpdateBossChecklist(bossNPC);
+					updateChecklist=true;
 				}
 			}
 		}
@@ -101,11 +103,18 @@ namespace bossStatTracker
 		}
 
 
+		public void OnWorldLoad(){
+			if (updateChecklist){
+            	UpdateBossChecklist(bossNPC); // Pass the bossNPC reference
+            	updateChecklist = false; // Reset the flag
+			}
+		}
+
+
 		public void UpdateBossChecklist(NPC boss){
             // Check if the Boss Checklist mod is loaded
             Mod bossChecklist = ModLoader.GetMod("BossChecklist");
             if (bossChecklist != null){
-                // Assuming you have a method to get the boss name or ID
                 string bossName = boss.FullName; // Replace with the actual boss name
 
                 // Update the Boss Checklist with the total damage and max DPS
