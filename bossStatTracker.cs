@@ -117,6 +117,11 @@ namespace bossStatTracker
             if (bossChecklist != null){
                 string bossName = boss.FullName; // Replace with the actual boss name
 
+				// Debugging output
+				Main.NewText($"Updating Boss Checklist for: {bossName}");
+				Main.NewText($"Total Damage Done: {totalDamage}");
+				Main.NewText($"Max DPS: {maxDmgPerSec}");
+
                 // Update the Boss Checklist with the total damage and max DPS
                 bossChecklist.Call("AddCustomText", bossName, $"Total Damage Done: {totalDamage}");
                 bossChecklist.Call("AddCustomText", bossName, $"Max DPS: {maxDmgPerSec}");
