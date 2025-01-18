@@ -13,6 +13,13 @@ namespace bossStatTracker
 	public class bossStatTracker : Mod
 	{
 		//mod wide configurations
+		public override void Load(){
+            // Check for Boss Checklist dependency
+            Mod bossChecklist = ModLoader.GetMod("BossChecklist");
+            if (bossChecklist != null){
+                // You can perform any setup related to Boss Checklist here if needed
+            }
+        }
 	}
 
 	public class bossStatPlayer : ModPlayer{
@@ -25,6 +32,8 @@ namespace bossStatTracker
 		private int frameCounter=0;
 		private int maxDmgPerSec =0;
 		private int totalDamage=0;
+		
+		private Terraria.NPC bossNPC= null;
 
 
 
@@ -41,12 +50,14 @@ namespace bossStatTracker
 
 				//send the dps over to maxDPS for calculations
 				maxDPS(bossDps);
+				totalDMG(bossDps);
 			}
 
             // Check if any boss is active
             foreach (var npc in Main.npc){
                 if (npc.active && npc.boss){ // NPC is active (Alive) and is a boss
                     bossFound = true;
+					bossNPC=npc;
                     break;
                 }
 			}
@@ -55,25 +66,17 @@ namespace bossStatTracker
 				if(!isBossActive){ //tells it this is the beginning since we reset the variable below
 					//fight has started
 					isBossActive=true;
-
-					//set all global variables to 0
-					bossFightTimer=0;
-					frameCounter=0;
-					bossDps=0;
-					bossDmgDealtThisFrame=0;
-					maxDmgPerSec=0;
-					totalDamage=0;
-
+					resetVariables();
 				}
 				bossFightTimer++;
 			}else{
 				if (isBossActive){ //if the boss is no longer alive
 					//fight has ended
 					isBossActive=false;
+					UpdateBossChecklist(bossNPC);
 				}
 			}
 		}
-
 
 
  		// Regular OnHitNPC (accounts for all weapon types)
@@ -85,7 +88,6 @@ namespace bossStatTracker
         }
 
 
-
 		//keeps track of the highest dps during the boss fight
 		public void maxDPS(int bossDps){
 			int tempDps= bossDps;
@@ -93,10 +95,42 @@ namespace bossStatTracker
 		}
 
 
-
 		//adding up each dps for the entirety of the battle
-		public void totalDPS(int bossDps){
+		public void totalDMG(int bossDps){
 			totalDamage+=bossDps;
 		}
+
+
+		public void UpdateBossChecklist(NPC boss){
+            // Check if the Boss Checklist mod is loaded
+            Mod bossChecklist = ModLoader.GetMod("BossChecklist");
+            if (bossChecklist != null){
+                // Assuming you have a method to get the boss name or ID
+                string bossName = boss.FullName; // Replace with the actual boss name
+
+                // Update the Boss Checklist with the total damage and max DPS
+                bossChecklist.Call("AddCustomText", bossName, $"Total Damage Done: {totalDamage}");
+                bossChecklist.Call("AddCustomText", bossName, $"Max DPS: {maxDmgPerSec}");
+
+                // Optionally, reset the total damage and max DPS for the next fight
+                totalDamage = 0;
+                maxDmgPerSec = 0;
+            }
+        }
+
+
+		public void resetVariables(){
+			//set all global variables to 0
+			bossFightTimer=0;
+			frameCounter=0;
+			bossDps=0;
+			bossDmgDealtThisFrame=0;
+			maxDmgPerSec=0;
+			totalDamage=0;
+			bossNPC=null;
+		}
+
+
+
 	}
 }
