@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("bossStatTracker")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8e64b5b598c06330023e78d9576cfe7008440be9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9ec88f012eb05951974c53a3ffd584e2e52f83b8")]
 [assembly: System.Reflection.AssemblyProductAttribute("bossStatTracker")]
 [assembly: System.Reflection.AssemblyTitleAttribute("bossStatTracker")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

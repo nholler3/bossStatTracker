@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 using Terraria;
+using Terraria.UI;
 using Terraria.ID;
 
 namespace bossStatTracker
@@ -13,6 +15,17 @@ namespace bossStatTracker
 	public class bossStatTracker : Mod
 	{
 		//mod wide configurations
+		public static ModKeybind ToggleTrackerUI;
+
+		public override void Load()//perform intilization tasks, when the mod is loaded into the game
+		{
+        	ToggleTrackerUI = KeybindLoader.RegisterKeybind(this, "Toggle Tracker UI", Microsoft.Xna.Framework.Input.Keys.P); // Change "P" to your desired key
+		}
+
+		public override void Unload()//when the mod is closed, clear it's data and resources
+		{
+        ToggleTrackerUI = null;
+		}
 	}
 
 	public class bossStatPlayer : ModPlayer{
@@ -41,6 +54,7 @@ namespace bossStatTracker
 
 				//send the dps over to maxDPS for calculations
 				maxDPS(bossDps);
+				totalDPS(bossDps);
 			}
 
             // Check if any boss is active
@@ -92,11 +106,16 @@ namespace bossStatTracker
 			if(tempDps > maxDmgPerSec){maxDmgPerSec = tempDps;}
 		}
 
+		public int MaxDps => maxDmgPerSec;
 
 
 		//adding up each dps for the entirety of the battle
 		public void totalDPS(int bossDps){
 			totalDamage+=bossDps;
 		}
+
+		// Property to get the total damage
+		public int TotalDamage => totalDamage;
+
 	}
 }
