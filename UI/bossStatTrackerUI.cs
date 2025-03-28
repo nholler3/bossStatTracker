@@ -88,11 +88,13 @@ namespace bossStatTracker
     {
         private UIText totalDmgText;
         private UIText maxDPSText;
+
+        private UIPanel panel;
         public override void OnInitialize()//override when our mod loads
         {
 
             // Create a new panel
-            UIPanel panel = new UIPanel();
+            panel = new UIPanel();
             panel.SetPadding(0);
             panel.Width.Set(550, 0); // Set the width of the panel
             panel.Height.Set(450, 0); // Set the height of the panel
@@ -136,7 +138,29 @@ namespace bossStatTracker
             maxDPSText.SetText($"Maximum DPS: {player.MaxDps}");
         }
 
+        //from the advanced ui git wiki page
+        //this is to create a button
+        private void OnButtonClick(UIMouseEvent evt, UIElement listeningElement) {
+        // We can do stuff in here!
+        }
 
+        protected override void DrawSelf(SpriteBatch spriteBatch) {
+            base.DrawSelf(spriteBatch);
+
+            //this blocks keeps the player from using whatever is in their hand while clicking in the panel
+            //this was taken from the advanced ui guide
+        
+            // If this code is in the panel or container element, check it directly
+            if (ContainsPoint(Main.MouseScreen)) {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+            // Otherwise, we can check a child element instead
+            if (panel.ContainsPoint(Main.MouseScreen)) {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+
+
+        }
     }
 
 }

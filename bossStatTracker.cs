@@ -78,17 +78,18 @@ namespace bossStatTracker
 					maxDmgPerSec=0;
 					totalDamage=0;
 
+
+
 				}
 				bossFightTimer++;
 			}else{
 				if (isBossActive){ //if the boss is no longer alive
 					//fight has ended
 					isBossActive=false;
+
 				}
 			}
 		}
-
-
 
  		// Regular OnHitNPC (accounts for all weapon types)
 		public override void OnHitNPC( NPC target, NPC.HitInfo hitInfo, int damage){
@@ -98,8 +99,6 @@ namespace bossStatTracker
             }
         }
 
-
-
 		//keeps track of the highest dps during the boss fight
 		public void maxDPS(int bossDps){
 			int tempDps= bossDps;
@@ -108,7 +107,6 @@ namespace bossStatTracker
 
 		public int MaxDps => maxDmgPerSec;
 
-
 		//adding up each dps for the entirety of the battle
 		public void totalDPS(int bossDps){
 			totalDamage+=bossDps;
@@ -116,6 +114,7 @@ namespace bossStatTracker
 
 		// Property to get the total damage
 		public int TotalDamage => totalDamage;
+
 
 	}
 }
