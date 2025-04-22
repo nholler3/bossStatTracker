@@ -7,6 +7,7 @@ using Terraria.GameContent;
 using System.Collections.Generic;
 using Terraria.GameContent.UI.Elements;
 using bossStatTracker;
+using bossStatTracker.UI; // Import the panel
 
 namespace bossStatTracker
 {
@@ -84,83 +85,28 @@ namespace bossStatTracker
         }
     }
 
+    // This is the main UIState that gets activated/deactivated by the ModSystem
     class bossStatTrackerUI : UIState
     {
-        private UIText totalDmgText;
-        private UIText maxDPSText;
+        private BossStatTrackerPanel panel;
 
-        private UIPanel panel;
-        public override void OnInitialize()//override when our mod loads
+        public override void OnInitialize()
         {
-
-            // Create a new panel
-            panel = new UIPanel();
-            panel.SetPadding(0);
-            panel.Width.Set(550, 0); // Set the width of the panel
-            panel.Height.Set(450, 0); // Set the height of the panel
-            panel.BackgroundColor = new Color(252,249,238); // Set the background color of the panel : Elderflower
-            panel.HAlign = panel.VAlign = 0.5f; // 1, set the panel to the middle of the screen
-            Append(panel); // Append the panel to the UIState
-
-            // Add other UI elements to the panel here
-            UIText text = new UIText("Boss Stats will be here soon :)");
-
-            panel.Append(text);
-
-
-            UIText bossNameHeader = new UIText("Boss Name");//we need to get a variable with the boss name 
-            bossNameHeader.HAlign = 0.5f; //horizontal alignment set to 50%
-            bossNameHeader.Top.Set(15, 0); //Top position is 15 pixels from the top of the UI Panel
-            panel.Append(bossNameHeader);
-
-            totalDmgText = new UIText($"Total Damage Done: ");
-            totalDmgText.HAlign = 0.1f;
-            totalDmgText.Top.Set(45,0);
-            totalDmgText.Left.Set(12, 0);
-            panel.Append(totalDmgText);
-
-            maxDPSText = new UIText("Highest DPS:  ");
-            maxDPSText.HAlign = 0.1f;
-            maxDPSText.Top.Set(75,0);
-            maxDPSText.Left.Set(12, 0);
-            panel.Append(maxDPSText);
+            // Create and add our custom panel (moved to its own file)
+            panel = new BossStatTrackerPanel();
+            Append(panel);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            // Get the player instance
+            // Get the ModPlayer instance to fetch boss stats
             bossStatPlayer player = Main.LocalPlayer.GetModPlayer<bossStatPlayer>();
 
-            // Update the total DPS text
-            totalDmgText.SetText($"Total DPS: {player.TotalDamage}");
-            maxDPSText.SetText($"Maximum DPS: {player.MaxDps}");
-        }
-
-        //from the advanced ui git wiki page
-        //this is to create a button
-        private void OnButtonClick(UIMouseEvent evt, UIElement listeningElement) {
-        // We can do stuff in here!
-        }
-
-        protected override void DrawSelf(SpriteBatch spriteBatch) {
-            base.DrawSelf(spriteBatch);
-
-            //this blocks keeps the player from using whatever is in their hand while clicking in the panel
-            //this was taken from the advanced ui guide
-        
-            // If this code is in the panel or container element, check it directly
-            if (ContainsPoint(Main.MouseScreen)) {
-                Main.LocalPlayer.mouseInterface = true;
-            }
-            // Otherwise, we can check a child element instead
-            if (panel.ContainsPoint(Main.MouseScreen)) {
-                Main.LocalPlayer.mouseInterface = true;
-            }
-
-
+            // Pass player data to the panel to update the text fields
+            panel.UpdateText(player);
         }
     }
-
 }
+
