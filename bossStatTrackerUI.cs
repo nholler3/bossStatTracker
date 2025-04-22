@@ -16,6 +16,7 @@ namespace bossStatTracker
         internal UserInterface TrackerInterface;
         internal bossStatTrackerUI TrackerUI; //TrackerUI is type bossStatTrackerUI
         private GameTime _lastUpdateUiGameTime;
+        private bool wasInventoryOpenLastFrame = false;
 
 
         public override void Load()
@@ -49,10 +50,21 @@ namespace bossStatTracker
                 if (TrackerInterface.CurrentState == null)
                 {
                     ShowTrackerUI(); //if hotkey is pressed, show the ui
-                }else{
+                }
+                else
+                {
                     HideTrackerUI();//if hotkey is pressed hide the ui
                 }
             }
+
+            // Automatically close when inventory closes
+            if (!Main.playerInventory && wasInventoryOpenLastFrame)
+            {
+                HideTrackerUI(); // Or ToggleUI(false);
+            }
+
+            wasInventoryOpenLastFrame = Main.playerInventory;
+
         }
 
         internal void ShowTrackerUI()//helper method for displaying the the ui
@@ -83,6 +95,18 @@ namespace bossStatTracker
                     InterfaceScaleType.UI));
             }
         }
+
+        internal static void ToggleUI(bool visible)
+        {
+            if (!Main.dedServ && ModContent.GetInstance<bossStatTrackerUISystem>() is bossStatTrackerUISystem system)
+            {
+                if (visible)
+                    system.ShowTrackerUI();
+                else
+                    system.HideTrackerUI();
+            }
+        }
+
     }
 
     // This is the main UIState that gets activated/deactivated by the ModSystem
