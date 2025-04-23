@@ -6,6 +6,8 @@ using Terraria.UI;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Audio;       // for SoundEngine
 using Terraria.ID;          // for SoundID
+using bossStatTracker.System;
+
 
 namespace bossStatTracker.UI
 {
