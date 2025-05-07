@@ -7,6 +7,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using System.Collections.Generic;
 using bossStatTracker.UI; // Import the panel/State
+using System;
 
 namespace bossStatTracker.System
 {
@@ -16,6 +17,7 @@ namespace bossStatTracker.System
         internal bossStatTrackerUI TrackerUI; //TrackerUI is type bossStatTrackerUI
         private GameTime _lastUpdateUiGameTime;
         private bool wasInventoryOpenLastFrame = false;
+
 
         public override void Load()
         {
@@ -146,5 +148,42 @@ namespace bossStatTracker.System
                     system.HideTrackerUI();
             }
         }
+
+        //setting up the boss checklist api
+        private static Dictionary<string, Dictionary<string, object>> _bossDict;
+        private static bool bossChecklistDataLoaded = false;
+        public static Dictionary<string, Dictionary<string, object>> BossData => _bossDict;
+        public override void PostSetupContent()
+        {
+            if (bossChecklistDataLoaded)
+                return;
+
+            // Log the attempt to get the BossChecklist mod
+            Mod.Logger.Info("Attempting to resolve BossChecklist mod...");
+
+            if (ModLoader.TryGetMod("BossChecklist", out Mod bossChecklist))
+            {
+                Mod.Logger.Info("Successfully resolved BossChecklist mod.");
+
+                // Attempt to call GetBossInfoDictionary
+                var dict = bossChecklist.Call("GetBossInfoDictionary", Mod, new Version(1, 6).ToString()) as Dictionary<string, Dictionary<string, object>>;
+
+                if (dict != null)
+                {
+                    _bossDict = dict;
+                    bossChecklistDataLoaded = true;
+                    Mod.Logger.Info($"BossChecklist data loaded successfully. Entries count: {_bossDict.Count}");
+                }
+                else
+                {
+                    Mod.Logger.Warn("⚠️ BossChecklist returned null for GetBossInfoDictionary.");
+                }
+            }
+            else
+            {
+                Mod.Logger.Warn("⚠️ Failed to resolve BossChecklist mod.");
+            }
+        }
+
     }
 }
