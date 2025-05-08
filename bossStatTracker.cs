@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.UI;
 using Terraria.ID;
 using Steamworks;
+using bossStatTracker.UI;
 
 namespace bossStatTracker
 {

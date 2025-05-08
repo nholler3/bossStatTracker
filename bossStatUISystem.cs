@@ -183,6 +183,7 @@ namespace bossStatTracker.System
             {
                 Mod.Logger.Warn("⚠️ Failed to resolve BossChecklist mod.");
             }
+
         }
 
     }

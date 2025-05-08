@@ -24,7 +24,7 @@ namespace bossStatTracker.UI
             bossStatPlayer player = Main.LocalPlayer.GetModPlayer<bossStatPlayer>();
 
             // Pass player data to the panel to update the text fields
-            panel.UpdateText(player);
+            panel.UpdateStats(player);
         }
     }
 }

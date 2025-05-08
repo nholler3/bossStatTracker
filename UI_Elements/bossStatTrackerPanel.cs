@@ -13,12 +13,8 @@ namespace bossStatTracker.UI
 {
     public class BossStatTrackerPanel : UIPanel
     {
-        private UIText totalDmgText;
-        private UIText maxDPSText;
-        private UIText bossNameHeader;
-        private string lastBossName = "";
-
-
+        private PanelHeader panelHeader;
+        private StatisticPanel statPanel;
 
         public BossStatTrackerPanel()
         {
@@ -31,25 +27,15 @@ namespace bossStatTracker.UI
 
             // Add UI elements to the panel below---------------------------------------------
 
-            //boss name, title part of the ui
-            bossNameHeader = new UIText("Boss: none"); // we need to get a variable with the boss name 
-            bossNameHeader.HAlign = 0.5f; // horizontal alignment set to 50%
-            bossNameHeader.Top.Set(15, 0); // Top position is 15 pixels from the top of the UI Panel
-            Append(bossNameHeader);
+            // Create and append the header section
+            panelHeader = new PanelHeader();
+            panelHeader.Top.Set(0f, 0f);
+            Append(panelHeader);
 
-            //total damage done text and call to the method in the backend
-            totalDmgText = new UIText($"Total Damage Done: ");
-            totalDmgText.HAlign = 0.1f;
-            totalDmgText.Top.Set(45, 0);
-            totalDmgText.Left.Set(12, 0);
-            Append(totalDmgText);
-
-            // max dps
-            maxDPSText = new UIText("Highest DPS:  ");
-            maxDPSText.HAlign = 0.1f;
-            maxDPSText.Top.Set(75, 0);
-            maxDPSText.Left.Set(12, 0);
-            Append(maxDPSText);
+            //create and append the statistics panel
+            statPanel =new StatisticPanel();
+            statPanel.Top.Set(40f, 0f);
+            Append(statPanel);
 
             //"X" close button
             UITextPanel<string> closeButton = new UITextPanel<string>("X", 0.5f, true);
@@ -71,24 +57,21 @@ namespace bossStatTracker.UI
             // Append(bossListSidePanel);
         }
 
-        // Dynamically update the values based on the player stats
-        public void UpdateText(bossStatPlayer player)
-        {
-            // Update the total DPS text
-            totalDmgText?.SetText($"Total DMG: {player.TotalDamage}/{player.MaxBossHealth} ({player.DamagePercentage:F1}%)");
-            maxDPSText?.SetText($"Maximum DPS: {player.MaxDps}");
-        }
+
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            string currentName = Main.LocalPlayer.GetModPlayer<bossStatPlayer>().CurrentBossDisplayName;
+            var player = Main.LocalPlayer.GetModPlayer<bossStatPlayer>();
 
-            if (currentName != lastBossName) {
-                bossNameHeader.SetText(string.IsNullOrEmpty(currentName) ? "No boss active" : "Boss: " + currentName);
-                lastBossName = currentName;
-            }
+            panelHeader.UpdateBossName(player.CurrentBossDisplayName);
+        }
+
+        //make the statpanel visible to the UIState so it can be updated
+        public void UpdateStats(bossStatPlayer player)
+        {
+            statPanel.UpdateText(player);
         }
 
         // from the advanced ui git wiki page
