@@ -19,6 +19,7 @@ namespace bossStatTracker.UI
         private string lastBossName = "";
 
 
+
         public BossStatTrackerPanel()
         {
             // Set up the panel itself
@@ -74,7 +75,7 @@ namespace bossStatTracker.UI
         public void UpdateText(bossStatPlayer player)
         {
             // Update the total DPS text
-            totalDmgText?.SetText($"Total DPS: {player.TotalDamage}");
+            totalDmgText?.SetText($"Total DMG: {player.TotalDamage}/{player.MaxBossHealth} ({player.DamagePercentage:F1}%)");
             maxDPSText?.SetText($"Maximum DPS: {player.MaxDps}");
         }
 

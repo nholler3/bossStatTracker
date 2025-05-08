@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 using Terraria;
 using Terraria.UI;
 using Terraria.ID;
+using Steamworks;
 
 namespace bossStatTracker
 {
@@ -44,15 +45,15 @@ namespace bossStatTracker
 		public string CurrentBossKey { get; private set; } = "";
 		public string CurrentBossDisplayName { get; private set; } = "";
 		private static bool bossChecklistDataLoaded = false;
+		private int bossMaxHealth=0;
+		private float damagePercentage=0;
 
 
 
 		public override void PostUpdate()
 		{
-
 			bool bossFound = false;
 			frameCounter++; //tick the frame counter up, this runs at the end of every frame
-
 
 			//reset DPS calculations every second (60fps)
 			if (frameCounter >= 60)
@@ -72,7 +73,7 @@ namespace bossStatTracker
 				if (npc.active && npc.boss)
 				{ // NPC is active (Alive) and is a boss
 					bossFound = true;
-					Main.NewText("npc type:" + npc.type);
+					//Main.NewText("npc type:" + npc.type);
 
 					//for the bossname, checking from the bossChecklist api
 					string bossKey = BossChecklistData.GetBossKeyFromNpc(npc.type);
@@ -80,8 +81,10 @@ namespace bossStatTracker
 					{
 						CurrentBossKey = bossKey;
 						CurrentBossDisplayName = BossChecklistData.GetDisplayNameFromKey(bossKey) ?? npc.TypeName;
-						Main.NewText("Detected Boss: " + CurrentBossDisplayName); // Debug ddd
+						//Main.NewText("Detected Boss: " + CurrentBossDisplayName); // Debug ddd
 					}
+					//get the bosses maxhealth
+					if(bossFightTimer<=2)bossMaxHealth = npc.lifeMax;
 					break;
 				}
 			}
@@ -100,7 +103,6 @@ namespace bossStatTracker
 					bossDmgDealtThisFrame = 0;
 					maxDmgPerSec = 0;
 					totalDamage = 0;
-
 				}
 				bossFightTimer++;
 			}
@@ -138,11 +140,16 @@ namespace bossStatTracker
 		public void totalDPS(int bossDps)
 		{
 			totalDamage += bossDps;
+			//get the percentage
+			if(bossMaxHealth>0){
+				damagePercentage= (float)totalDamage/bossMaxHealth *100f;
+			}
 		}
 
 		// Property to get the total damage
 		public int TotalDamage => totalDamage;
 
-
+		public int MaxBossHealth => bossMaxHealth;
+		public float DamagePercentage => damagePercentage;
 	}
 }
