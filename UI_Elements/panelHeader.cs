@@ -1,3 +1,4 @@
+//panelHeader.cs
 using Terraria.GameContent.UI.Elements;
 using Microsoft.Xna.Framework;
 using Terraria.UI;

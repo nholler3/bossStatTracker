@@ -1,3 +1,4 @@
+//statisticPanel.cs
 using Terraria.UI;
 using Terraria.GameContent.UI.Elements;
 using Microsoft.Xna.Framework;
@@ -8,8 +9,12 @@ namespace bossStatTracker.UI{
 
         private UIText totalDmgText;
         private UIText maxDPSText;
+        
+        private UIText fightTimeText;
 
-        public StatisticPanel(){
+
+        public StatisticPanel()
+        {
             Width.Set(0f, 1f); //width of parent, 1f denotes from the parent
             Height.Set(0f, 0.33f); // 30% of the height of the parent
 
@@ -29,6 +34,12 @@ namespace bossStatTracker.UI{
             maxDPSText.Top.Set(35f, 0);
             //maxDPSText.Left.Set(12f, 0);
             Append(maxDPSText);
+
+            fightTimeText = new UIText("Fight Time: 0:00");
+            fightTimeText.HAlign = 0.03f;
+            fightTimeText.Top.Set(65f, 0f);
+            Append(fightTimeText);
+
         }
 
         // Dynamically update the values based on the player stats
@@ -37,6 +48,9 @@ namespace bossStatTracker.UI{
             // Update the total DPS text
             totalDmgText?.SetText($"Total DMG: {player.TotalDamage}/{player.MaxBossHealth} ({player.DamagePercentage:F1}%)");
             maxDPSText?.SetText($"Maximum DPS: {player.MaxDps}");
+
+            fightTimeText?.SetText($"Fight Time: {player.GetFormattedTime()}");
+
         }
 
     }

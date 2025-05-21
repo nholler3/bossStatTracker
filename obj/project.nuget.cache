@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "RDCNbnQgn0I=",
+  "dgSpecHash": "DoCisBsYGJQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\N8hol\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\bossStatTracker\\bossStatTracker.csproj",
+  "projectFilePath": "C:\\Users\\garre\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\bossStatTracker\\bossStatTracker.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\N8hol\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
+    "C:\\Users\\garre\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
   ],
   "logs": []
 }

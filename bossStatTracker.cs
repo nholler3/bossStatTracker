@@ -1,3 +1,4 @@
+//bossStatTracker.cs
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,7 @@ namespace bossStatTracker
 	{
 		//individual player based configs
 
+
 		private int bossDmgDealtThisFrame = 0; // Damage dealt in the current second
 		private int bossDps = 0; // DPS value
 		private bool isBossActive = false;
@@ -46,8 +48,8 @@ namespace bossStatTracker
 		public string CurrentBossKey { get; private set; } = "";
 		public string CurrentBossDisplayName { get; private set; } = "";
 		private static bool bossChecklistDataLoaded = false;
-		private int bossMaxHealth=0;
-		private float damagePercentage=0;
+		private int bossMaxHealth = 0;
+		private float damagePercentage = 0;
 
 
 
@@ -85,37 +87,27 @@ namespace bossStatTracker
 						//Main.NewText("Detected Boss: " + CurrentBossDisplayName); // Debug ddd
 					}
 					//get the bosses maxhealth
-					if(bossFightTimer<=2)bossMaxHealth = npc.lifeMax;
+					if (bossFightTimer <= 2) bossMaxHealth = npc.lifeMax;
 					break;
 				}
 			}
 
 			if (bossFound)
-			{ //if the boss is alive
-				if (!isBossActive)
-				{ //tells it this is the beginning since we reset the variable below
-				  //fight has started
-					isBossActive = true;
-
-					//set all global variables to 0
-					bossFightTimer = 0;
-					frameCounter = 0;
-					bossDps = 0;
-					bossDmgDealtThisFrame = 0;
-					maxDmgPerSec = 0;
-					totalDamage = 0;
-				}
-				bossFightTimer++;
-			}
-			else
 			{
-				if (isBossActive)
-				{ //if the boss is no longer alive
-				  //fight has ended
-					isBossActive = false;
-
+				if (!isBossActive)
+				{
+					isBossActive = true;
+					bossFightTimer = 0; // Start timer fresh
 				}
+
+				bossFightTimer++; // Add time every frame boss is active
 			}
+			else if (isBossActive)
+			{
+				isBossActive = false;
+				// Do NOT reset bossFightTimer — keep it for display
+			}
+
 		}
 
 		// Regular OnHitNPC (accounts for all weapon types)
@@ -142,8 +134,9 @@ namespace bossStatTracker
 		{
 			totalDamage += bossDps;
 			//get the percentage
-			if(bossMaxHealth>0){
-				damagePercentage= (float)totalDamage/bossMaxHealth *100f;
+			if (bossMaxHealth > 0)
+			{
+				damagePercentage = (float)totalDamage / bossMaxHealth * 100f;
 			}
 		}
 
@@ -152,5 +145,15 @@ namespace bossStatTracker
 
 		public int MaxBossHealth => bossMaxHealth;
 		public float DamagePercentage => damagePercentage;
+		
+
+		public string GetFormattedTime()
+		{
+			int seconds = bossFightTimer / 60;
+			int minutes = seconds / 60;
+			seconds %= 60;
+			return $"{minutes}:{seconds:D2}";
+		}
+
 	}
 }

@@ -1,3 +1,4 @@
+//bossStatTrackerUI.cs
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.UI;
